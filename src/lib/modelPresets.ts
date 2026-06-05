@@ -2,26 +2,23 @@ import type { VisionModelConfig, VisionModelPreset } from "../types/photo";
 
 export const VISION_MODEL_PRESETS: VisionModelPreset[] = [
   {
-    id: "gemini-2-5-flash-photo",
-    name: "Gemini 2.5 Flash 高维分析",
-    provider: "Gemini",
-    task: "gemini-vision-analysis",
-    model: "gemini-2.5-flash",
-    description: "云端多模态模型，直接输出摄影结构化 JSON，适合更高质量分析。",
+    id: "local-tools-basic",
+    name: "极速基础分析",
+    provider: "Local Tools",
+    task: "tool-only-analysis",
+    model: "cv-exif-rule-engine",
+    description: "不等待模型下载，直接用 CV 指标、EXIF 和规则引擎生成基础建议。",
     defaultConfig: {
-      topK: 8,
-      temperature: 0.2,
-      responseJson: true,
-      apiKeyStorage: "session",
+      topK: 0,
     },
   },
   {
     id: "vit-imagenet",
-    name: "ViT 通用识别",
+    name: "ViT 快速通用识别",
     provider: "Transformers.js",
     task: "image-classification",
     model: "Xenova/vit-base-patch16-224",
-    description: "ImageNet 通用图片分类，适合识别主体与基础场景。",
+    description: "浏览器本地通用图片分类，作为基础分析的默认轻量视觉信号；超时会自动降级到 CV/EXIF/规则。",
     defaultConfig: {
       topK: 5,
     },
@@ -46,6 +43,20 @@ export const VISION_MODEL_PRESETS: VisionModelPreset[] = [
         "night photography",
       ],
       hypothesisTemplate: "This is a photo of {}.",
+    },
+  },
+  {
+    id: "gemini-2-5-flash-photo",
+    name: "Gemini 2.5 Flash 高级分析",
+    provider: "Gemini",
+    task: "gemini-vision-analysis",
+    model: "gemini-2.5-flash",
+    description: "可选云端多模态分析，适合补充深度点评；基础分析不依赖它。",
+    defaultConfig: {
+      topK: 8,
+      temperature: 0.2,
+      responseJson: true,
+      apiKeyStorage: "session",
     },
   },
 ];

@@ -22,10 +22,10 @@ function TermBubble({ entry }: TermBubbleProps) {
         <Info className="h-3 w-3" aria-hidden="true" />
       </button>
       <span className="absolute left-0 top-full z-40 hidden w-[min(320px,calc(100vw-48px))] pt-2 group-focus-within:block group-hover:block">
-        <span className="block rounded-lg border border-line bg-white p-3 text-left shadow-soft">
-          <span className="block text-sm font-semibold text-ink">{entry.term}</span>
-          <span className="mt-1 block text-xs leading-5 text-ink/70">{entry.explanation}</span>
-          <span className="mt-2 block rounded-md bg-paper px-2 py-1.5 text-xs leading-5 text-ink/65">
+        <span className="block rounded-md border border-line bg-cream p-3 text-left text-dark-ink">
+          <span className="block text-sm font-semibold">{entry.term}</span>
+          <span className="mt-1 block text-xs leading-5 text-dark-ink/70">{entry.explanation}</span>
+          <span className="mt-2 block rounded-md bg-cream-alt px-2 py-1.5 text-xs leading-5 text-dark-ink/60">
             {entry.note}
           </span>
           <span className="mt-2 flex flex-col gap-1.5">

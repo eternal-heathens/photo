@@ -10,12 +10,20 @@ declare const _default: {
                 teal: string;
                 coral: string;
                 moss: string;
+                forest: string;
+                "forest-alt": string;
+                cream: string;
+                "cream-alt": string;
+                "dark-ink": string;
+                "wood-glow": string;
             };
             boxShadow: {
                 soft: string;
             };
             fontFamily: {
-                sans: [string, string, string, string, string, string, string];
+                display: [string, string, string, string, string];
+                mono: [string, string, string, string];
+                sans: [string, string, string, string, string, string, string, string];
             };
         };
     };

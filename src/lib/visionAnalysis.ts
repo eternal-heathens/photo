@@ -56,6 +56,8 @@ export function snapshotVisionConfig(config: VisionModelConfig): VisionModelConf
 }
 
 export function labelsToSceneType(labels: VisionLabel[]) {
+  if (!labels.length) return "未分类";
+
   const labelText = labels.map((item) => item.label.toLowerCase()).join(" ");
 
   if (/person|face|bride|groom|suit|dress|portrait|kimono/.test(labelText)) return "人像";
@@ -119,6 +121,18 @@ export async function classifyPhoto(
   config = createDefaultVisionModelConfig(),
 ): Promise<VisionAnalysis> {
   try {
+    if (config.provider === "Local Tools") {
+      return {
+        provider: "Local Tools",
+        model: config.model,
+        task: config.task,
+        config: snapshotVisionConfig(config),
+        status: "fallback",
+        labels: [],
+        error: "已使用极速基础分析，未运行视觉模型。",
+      };
+    }
+
     if (config.provider === "Gemini") {
       const structuredResult = await analyzePhotoWithGemini(file, config);
 
