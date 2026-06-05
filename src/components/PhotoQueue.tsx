@@ -20,7 +20,7 @@ export function PhotoQueue({ photos, onRemovePhoto }: PhotoQueueProps) {
         {photos.map((photo) => (
           <article
             key={photo.id}
-            className="flex min-w-0 items-center gap-3 rounded-lg border border-line bg-white p-3"
+            className="flex min-w-0 items-center gap-3 rounded-lg border border-line bg-forest-alt/75 p-3"
           >
             <img
               className="h-16 w-16 rounded-md object-cover"
@@ -29,11 +29,11 @@ export function PhotoQueue({ photos, onRemovePhoto }: PhotoQueueProps) {
             />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-ink">{photo.fileName}</p>
-              <p className="text-xs text-ink/55">{formatFileSize(photo.size)}</p>
+              <p className="text-xs text-ink/60">{formatFileSize(photo.size)}</p>
             </div>
             <button
               type="button"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-line text-ink/65 transition hover:border-coral hover:bg-coral/10 hover:text-coral focus:outline-none focus:ring-2 focus:ring-coral focus:ring-offset-2"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-line text-ink/70 transition hover:border-coral hover:bg-coral/10 hover:text-coral focus:outline-none focus:ring-2 focus:ring-coral focus:ring-offset-2 focus:ring-offset-paper"
               aria-label={`删除 ${photo.fileName}`}
               onClick={() => onRemovePhoto(photo.id)}
               title="删除"

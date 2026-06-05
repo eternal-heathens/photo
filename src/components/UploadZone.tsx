@@ -1,7 +1,7 @@
 import { ChangeEvent, DragEvent, useRef, useState } from "react";
 import { ImagePlus, UploadCloud } from "lucide-react";
 import type { UploadedPhoto } from "../types/photo";
-import { ACCEPTED_IMAGE_TYPES, createPhotoId } from "../lib/utils";
+import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_FILE_BYTES, createPhotoId, formatFileSize } from "../lib/utils";
 
 type UploadZoneProps = {
   onAddPhotos: (photos: UploadedPhoto[]) => void;
@@ -16,11 +16,18 @@ export function UploadZone({ onAddPhotos, onInvalidFiles }: UploadZoneProps) {
     if (!fileList?.length) return;
 
     const files = Array.from(fileList);
-    const validFiles = files.filter((file) => ACCEPTED_IMAGE_TYPES.includes(file.type));
-    const invalidFiles = files.filter((file) => !ACCEPTED_IMAGE_TYPES.includes(file.type));
+    const invalidFiles = files
+      .filter((file) => !ACCEPTED_IMAGE_TYPES.includes(file.type) || file.size > MAX_IMAGE_FILE_BYTES)
+      .map((file) => {
+        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return `${file.name}（格式不支持）`;
+        return `${file.name}（超过 ${formatFileSize(MAX_IMAGE_FILE_BYTES)}）`;
+      });
+    const validFiles = files.filter(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type) && file.size <= MAX_IMAGE_FILE_BYTES,
+    );
 
     if (invalidFiles.length) {
-      onInvalidFiles(invalidFiles.map((file) => file.name));
+      onInvalidFiles(invalidFiles);
     }
 
     if (validFiles.length) {
@@ -51,8 +58,8 @@ export function UploadZone({ onAddPhotos, onInvalidFiles }: UploadZoneProps) {
     <section
       className={`rounded-lg border border-dashed p-6 transition ${
         isDragging
-          ? "border-teal bg-teal/10"
-          : "border-line bg-white hover:border-cobalt hover:bg-cobalt/5"
+          ? "border-cobalt bg-cobalt/10"
+          : "border-line bg-forest-alt/75 hover:border-cobalt hover:bg-cobalt/10"
       }`}
       onDragOver={(event) => {
         event.preventDefault();
@@ -70,18 +77,18 @@ export function UploadZone({ onAddPhotos, onInvalidFiles }: UploadZoneProps) {
         onChange={handleInputChange}
       />
       <div className="flex flex-col items-center gap-4 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-cobalt text-white">
+        <div className="flex h-14 w-14 items-center justify-center rounded-md bg-cream text-dark-ink">
           <UploadCloud className="h-7 w-7" aria-hidden="true" />
         </div>
         <div className="space-y-1">
-          <h2 className="text-lg font-semibold text-ink">上传照片</h2>
-          <p className="max-w-2xl text-sm leading-6 text-ink/65">
+          <h2 className="font-display text-xl font-bold text-ink">上传照片</h2>
+          <p className="max-w-2xl text-sm leading-6 text-ink/60">
             拖拽图片到此处，或点击选择文件；支持 jpg、jpeg、png、webp，支持多张图片。
           </p>
         </div>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-md bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-ink/90 focus:outline-none focus:ring-2 focus:ring-cobalt focus:ring-offset-2"
+          className="inline-flex items-center gap-2 rounded-md bg-cobalt px-4 py-2 text-sm font-semibold text-paper transition hover:bg-cobalt/90 focus:outline-none focus:ring-2 focus:ring-cobalt focus:ring-offset-2 focus:ring-offset-paper"
           onClick={() => inputRef.current?.click()}
         >
           <ImagePlus className="h-4 w-4" aria-hidden="true" />

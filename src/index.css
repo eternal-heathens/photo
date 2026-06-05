@@ -17,7 +17,12 @@
 body {
   margin: 0;
   min-width: 320px;
-  background: #f7f6f2;
+  background:
+    linear-gradient(rgba(30, 43, 250, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 43, 250, 0.035) 1px, transparent 1px),
+    #fdfae7;
+  background-size: 44px 44px;
+  color: #111111;
 }
 
 button,
@@ -29,4 +34,9 @@ select {
 
 img {
   display: block;
+}
+
+::selection {
+  background: rgba(30, 43, 250, 0.18);
+  color: #111111;
 }

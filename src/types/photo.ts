@@ -10,9 +10,10 @@ export type VisionLabel = {
   score: number;
 };
 
-export type VisionProvider = "Transformers.js" | "Gemini";
+export type VisionProvider = "Local Tools" | "Transformers.js" | "Gemini";
 
 export type VisionTask =
+  | "tool-only-analysis"
   | "image-classification"
   | "zero-shot-image-classification"
   | "gemini-vision-analysis";
