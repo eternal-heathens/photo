@@ -21,19 +21,33 @@ jobs:
         run: |
           set -euo pipefail
           urls=(
-            "https://temp.sh/zmuvs/photo-changes.tar.xz"
             "https://o.uguu.se/ZvfjfkVm.xz"
             "https://litter.catbox.moe/ok64k1.xz"
+            "https://temp.sh/zmuvs/photo-changes.tar.xz"
           )
+          expected_size="95424"
+          expected_sha="d51c8ea143ae2bd8062a7f5d3a65694b8748a4a96743643e6ba492005f19b73a"
+          payload="/tmp/photo-changes.tar.xz"
+          found=""
           for url in "${urls[@]}"; do
             echo "Trying payload: ${url}"
-            if curl -L --fail --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 120 -o /tmp/photo-changes.tar.xz "${url}"; then
-              break
+            if ! curl -L --fail --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 120 -o "${payload}" "${url}"; then
+              continue
             fi
+            actual_size="$(wc -c < "${payload}" | tr -d ' ')"
+            if [ "${actual_size}" != "${expected_size}" ]; then
+              echo "Unexpected payload size: ${actual_size}"
+              continue
+            fi
+            if ! echo "${expected_sha}  ${payload}" | sha256sum --check --status; then
+              echo "Unexpected payload checksum"
+              continue
+            fi
+            found="1"
+            break
           done
-          test -s /tmp/photo-changes.tar.xz
-          echo "95424  /tmp/photo-changes.tar.xz" | sha256sum --check --status || true
-          tar -xJf /tmp/photo-changes.tar.xz -C "$GITHUB_WORKSPACE"
+          test -n "${found}"
+          tar -xJf "${payload}" -C "$GITHUB_WORKSPACE"
           rm -f .github/workflows/codex-publish-photo.yml
           git config user.name "codex-publisher"
           git config user.email "actions@users.noreply.github.com"
